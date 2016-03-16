@@ -134,7 +134,7 @@ String msgCompleta;
     public void enviandoEmail()
     {
         Properties login = new Properties();
-        String properties = "javamailsamples/login.properties";
+        String properties = "json/login.properties";
         try {
             InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(properties);
             login.load(stream);
