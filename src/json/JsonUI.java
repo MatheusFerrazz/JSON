@@ -11,8 +11,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -69,7 +67,7 @@ String msgCompleta;
                 msgCompleta+="Ano de Fundação: " + objPrincipal.getString("foundation_year")+"\n";
                 msgCompleta+="Quantidade de Voltas: " + objPrincipal2.getString("race_laps")+"\n";
                 msgCompleta+="Distância do Circuito: " + objPrincipal2.getString("race_distance")+"\n";
-                System.out.println("");
+                msgCompleta +=" "+"\n";
  
              JSONArray recordes =  objPrincipal.getJSONArray("records");
             for (int i = 0; i < recordes.length(); i++) 
@@ -126,7 +124,8 @@ String msgCompleta;
             System.out.println("Erro geral: " + e.getMessage());
         }
          jTextAreaMsgEmail.setText(msgCompleta);
-         
+         enviar.setEnabled(true);
+         json.setEnabled(false);
     }
 
             
@@ -148,7 +147,6 @@ String msgCompleta;
             Email email = new SimpleEmail();
             email.setHostName("smtp.live.com");
             email.setSmtpPort(587);
-            //email.setSSLOnConnect(true);
             email.setStartTLSRequired(true);
             email.setAuthenticator(new DefaultAuthenticator(username, password));
             email.setFrom(username);
@@ -157,10 +155,11 @@ String msgCompleta;
             email.addTo(emailDestino.getText());
             email.setDebug(true);
             email.send();
-            //System.out.println("Mensagem enviada.");
+            aviso.setText("Mensagem enviada.");
         } catch (EmailException ex) {
             System.out.println("Erro: " + ex.getMessage());
         }
+        
     }
 
     /**
@@ -181,10 +180,12 @@ String msgCompleta;
         assuntoEmail = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         json = new javax.swing.JButton();
+        aviso = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        enviar.setText("ENVIAR");
+        enviar.setText("Enviar E-mail");
+        enviar.setEnabled(false);
         enviar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 enviarMouseClicked(evt);
@@ -217,7 +218,7 @@ String msgCompleta;
 
         jLabel2.setText("Mensagem:");
 
-        json.setText("JSON");
+        json.setText("Carregar Json");
         json.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jsonMouseClicked(evt);
@@ -229,12 +230,11 @@ String msgCompleta;
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel2)
-                        .addGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jLabel1)
@@ -242,13 +242,18 @@ String msgCompleta;
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabelEmail)
                                     .addGap(13, 13, 13)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(29, 29, 29)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(aviso, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(emailDestino, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                                .addComponent(assuntoEmail))
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(enviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(json, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(assuntoEmail)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(enviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(json, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
@@ -265,10 +270,12 @@ String msgCompleta;
                     .addComponent(emailDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(enviar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(aviso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -339,6 +346,7 @@ String msgCompleta;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField assuntoEmail;
+    private javax.swing.JLabel aviso;
     private javax.swing.JTextField emailDestino;
     private javax.swing.JButton enviar;
     private javax.swing.JLabel jLabel1;
